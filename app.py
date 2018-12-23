@@ -135,7 +135,6 @@ def update_graph(xaxis_column_name, yaxis_column_name,
             text=eurostatframe[eurostatframe['NA_ITEM'] == yaxis_column_name]['GEO'],
             mode='markers',
             marker={
-                'color':'red'
                 'size': 15,
                 'opacity': 0.5,
                 'line': {'width': 0.5, 'color': 'white'}
