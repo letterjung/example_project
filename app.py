@@ -62,7 +62,7 @@ app.layout = html.Div([
             dcc.Dropdown( 
                 id='xaxis-column1',
                 options=[{'label': i, 'value': i} for i in available_indicators],
-                value='Gross domestic product at market prices'
+                value='Final consumption expenditure'
             )
         ],
         style={'width': '45%', 'display': 'inline-block'}),
@@ -70,7 +70,7 @@ app.layout = html.Div([
             dcc.Dropdown( 
                 id='yaxis-column1',
                 options=[{'label': i, 'value': i} for i in available_indicators],
-                value='Wages and salaries'
+                value='Changes in inventories'
             )
         ],style={'width': '45%', 'float': 'right', 'display': 'inline-block'})
     ]),            
@@ -93,7 +93,7 @@ app.layout = html.Div([
             dcc.Dropdown( 
                 id='xaxis-column2',
                 options=[{'label': i, 'value': i} for i in available_indicators],
-                value='Gross domestic product at market prices'
+                value='Final consumption expenditure'
             )
         ],
         style={'width': '45%', 'marginTop': 40, 'display': 'inline-block'}),
