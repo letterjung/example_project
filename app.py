@@ -1,3 +1,4 @@
+
 # coding: utf-8
 
 # In[ ]:
@@ -30,7 +31,7 @@ eurostat = pd.read_csv('nama_10_gdp_1_Data.csv',na_values=':',
                 usecols=['TIME', 'GEO', 'NA_ITEM', 'Value'] , engine='python')
 
 eurostat = eurostat.dropna(how='any',subset=["Value"],axis=0)
-eurostat = eurostat_drop[-data_drop.GEO.str.contains('Euro')]
+eurostat = eurostat[-eurostat.GEO.str.contains('Euro')]
 eurostat = eurostat.rename(index = {'Germany (until 1990 former territory of the FRG)': "Germany",'Kosovo (under United Nations Security Council Resolution 1244/99)': "Kosovo",'Former Yugoslav Republic of Macedonia, the': "Macedonia"})
 
 
