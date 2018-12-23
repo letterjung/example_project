@@ -53,7 +53,7 @@ eurostat_final_1 = eurostat_final[eurostat['UNIT'] == 'Current prices, million e
 
 app.layout = html.Div([
     html.H2('Cloud Computing Assignment - Oskar Schwarze',style={'textAlign': 'center', 'color': 'black'}),
-    html.H4('Two Indicators',style={'textAlign': 'left','marginTop': 40}),    
+    html.H4('Two Indicators',style={'textAlign': 'left'),    
     html.Div([
         html.Div([
             dcc.Dropdown( 
