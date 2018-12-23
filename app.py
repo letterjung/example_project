@@ -62,7 +62,7 @@ app.layout = html.Div([
                 value='Gross domestic product at market prices'
             )
         ],
-        style={'width': '30%', 'display': 'inline-block'}),
+        style={'width': '45%', 'display': 'inline-block'}),
         html.Div([
             dcc.Dropdown( 
                 id='yaxis-column1',
@@ -75,7 +75,7 @@ app.layout = html.Div([
                 value='Linear',
                 labelStyle={'display': 'inline-block'}
             )
-        ],style={'width': '30%', 'float': 'right', 'display': 'inline-block'})
+        ],style={'width': '45%', 'float': 'right', 'display': 'inline-block'})
     ]),            
     dcc.Graph(id='graph1'),
     html.Div(dcc.Slider( 
@@ -99,7 +99,7 @@ app.layout = html.Div([
                 value='Gross domestic product at market prices'
             )
         ],
-        style={'width': '30%', 'marginTop': 40, 'display': 'inline-block'}),
+        style={'width': '45%', 'marginTop': 40, 'display': 'inline-block'}),
 
         html.Div([
             dcc.Dropdown( 
@@ -107,7 +107,7 @@ app.layout = html.Div([
                 options=[{'label': i, 'value': i} for i in available_countries],
                 value= "Spain"    
             )
-        ],style={'width': '30%', 'marginTop': 40, 'float': 'right', 'display': 'inline-block'})
+        ],style={'width': '45%', 'marginTop': 40, 'float': 'right', 'display': 'inline-block'})
      ]),
      dcc.Graph(id='graph2'),
 ])
