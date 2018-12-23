@@ -12,7 +12,9 @@
 # * The first one will be a scatterplot with two DropDown boxes for the different indicators. It will have also a slide for the different years in the data. 
 # * The other graph will be a line chart with two DropDown boxes, one for the country and the other for selecting one of the indicators. (hint use Scatter object using mode = 'lines' [(more here)](https://plot.ly/python/line-charts/) 
 
-#Import libraries
+
+#Import necessary libraries
+
 import dash
 from dash.dependencies import Input, Output
 import dash_core_components as dcc
@@ -24,7 +26,7 @@ eurostat = pd.read_csv('nama_10_gdp_1_Data.csv')
 
 
 
-#Creating the Dashboard for Graph 1 & 2: 
+# Create the Dashboard for Graph 1 & 2: 
 
 app = dash.Dash(__name__)
 server = app.server
@@ -42,10 +44,9 @@ available_countries = eurostat_final['GEO'].unique()
 
 eurostat_final_1 = eurostat_final[eurostat['UNIT'] == 'Current prices, million euro']
 
-#Graph 1    
-#I create the layout of the first dropdown and set the default value for my graph - Gross domestic product at market prices
-# name of the x-axis is: xaxis-columns, and same for the yaxis = yaxiscolumns 
-#first graph name = graph1
+# Graph 1    
+# define the outline style, naming of the axes and the headings
+
 styles = {
     'pre': {
         'border': 'thin lightgrey solid',
@@ -74,7 +75,7 @@ app.layout = html.Div([
         ],style={'width': '45%', 'float': 'right', 'display': 'inline-block'})
     ]),            
     dcc.Graph(id='graph1'),
-    html.Div(dcc.Slider( 
+    html.Div(dcc.Slider( #definition of the year slider
         id='year--slider',
         min=eurostat['TIME'].min(),
         max=eurostat['TIME'].max(),
@@ -83,8 +84,8 @@ app.layout = html.Div([
         marks={str(time): str(time) for time in eurostat['TIME'].unique()},
     ), style={'marginRight': 50, 'marginLeft': 110},),
 
-#Second chart
-# Second graph name is id graph2
+# Graph 2
+# define the outline style, naming of the axes and the headings
     html.H4('Country & Indicator',style={'textAlign': 'left'}),   
     html.Div([ 
         
@@ -118,7 +119,7 @@ app.layout = html.Div([
      dash.dependencies.Input('year--slider', 'value')])
 
 
-#Dataframe for the time
+# Dataframe for the time
 
 def update_graph(xaxis_column_name, yaxis_column_name,
                  year_value):
@@ -131,7 +132,7 @@ def update_graph(xaxis_column_name, yaxis_column_name,
             text=eurostatframe[eurostatframe['NA_ITEM'] == yaxis_column_name]['GEO'],
             mode='markers',
             marker={
-                'size': 15,
+                'size': 20,
                 'opacity': 0.5,
                 'line': {'width': 2.5, 'color': 'red'}
             }
@@ -151,7 +152,7 @@ def update_graph(xaxis_column_name, yaxis_column_name,
     }
 
 
-#This is the call back function for the second chart
+# call back function for the second graph
 @app.callback(
     dash.dependencies.Output('graph2', 'figure'),
     [dash.dependencies.Input('xaxis-column2', 'value'),
@@ -159,7 +160,7 @@ def update_graph(xaxis_column_name, yaxis_column_name,
 
 
 
-#As here I have all of the years I just have to update the column names of the chart
+# Updater for the column names of the graphs
 
 def update_graph(xaxis_column_name, yaxis_column_name):
     
@@ -172,7 +173,7 @@ def update_graph(xaxis_column_name, yaxis_column_name):
             y=eurostatframe[eurostatframe['NA_ITEM'] == xaxis_column_name]['Value'],
             mode='lines',
             marker={
-                'size': 15,
+                'size': 20,
                 'opacity': 0.5,
                 'line': {'width': 2.5, 'color': 'red'}
             }
