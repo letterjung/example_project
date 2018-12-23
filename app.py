@@ -21,8 +21,7 @@ import pandas as pd
 import plotly.graph_objs as go
 
 eurostat = pd.read_csv('nama_10_gdp_1_Data.csv')
-available_indicators = eurostat['NA_ITEM'].unique()
-available_countries = eurostat['GEO'].unique()
+
 
 
 #Creating the Dashboard for Graph 1 & 2: 
@@ -35,6 +34,9 @@ app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"
 eurostat_drop = eurostat.dropna(how='any',subset=["Value"],axis=0)
 eurostat_1 = eurostat_drop[-eurostat_drop.GEO.str.contains('Euro')]
 eurostat_final = eurostat_1.rename(index = {'Germany (until 1990 former territory of the FRG)': "Germany",'Kosovo (under United Nations Security Council Resolution 1244/99)': "Kosovo",'Former Yugoslav Republic of Macedonia, the': "Macedonia"})
+
+available_indicators = eurostat_final['NA_ITEM'].unique()
+available_countries = eurostat_final['GEO'].unique()
 
 # Creating the data frame for the units:
 
