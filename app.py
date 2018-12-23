@@ -132,7 +132,6 @@ def update_graph(xaxis_column_name, yaxis_column_name,
             mode='markers',
             marker={
                 'size': 15,
-                'color': 'yellow'
                 'opacity': 0.5,
                 'line': {'width': 0.9, 'color': 'red'}
             }
