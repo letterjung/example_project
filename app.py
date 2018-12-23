@@ -42,16 +42,16 @@ available_countries = eurostat_final['GEO'].unique()
 
 eurostat_final_1 = eurostat_final[eurostat['UNIT'] == 'Current prices, million euro']
 
-
-
-
-
-
 #Graph 1    
 #I create the layout of the first dropdown and set the default value for my graph - Gross domestic product at market prices
 # name of the x-axis is: xaxis-columns, and same for the yaxis = yaxiscolumns 
 #first graph name = graph1
-
+styles = {
+    'pre': {
+        'border': 'thin lightgrey solid',
+        'overflowX': 'scroll'
+    }
+}
 
 app.layout = html.Div([
     html.H2('Cloud Computing Assignment - Oskar Schwarze',style={'textAlign': 'center', 'color': 'black'}),
