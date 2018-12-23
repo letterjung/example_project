@@ -20,28 +20,30 @@ import dash_html_components as html
 import pandas as pd
 import plotly.graph_objs as go
 
-app = dash.Dash(__name__)
-server = app.server
-
-app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
-
-
-
-eurostat = pd.read_csv('nama_10_gdp_1_Data.csv',na_values=':',
-                usecols=['TIME', 'GEO', 'NA_ITEM', 'Value'] , engine='python')
-
-eurostat = eurostat.dropna(how='any',subset=["Value"],axis=0)
-eurostat = eurostat[-eurostat.GEO.str.contains('Euro')]
-eurostat = eurostat.rename(index = {'Germany (until 1990 former territory of the FRG)': "Germany",'Kosovo (under United Nations Security Council Resolution 1244/99)': "Kosovo",'Former Yugoslav Republic of Macedonia, the': "Macedonia"})
-
-
-#Creating the Dashboard for Graph 1 & 2: 
+eurostat = pd.read_csv('nama_10_gdp_1_Data.csv')
 available_indicators = eurostat['NA_ITEM'].unique()
 available_countries = eurostat['GEO'].unique()
 
 
+#Creating the Dashboard for Graph 1 & 2: 
+
+app = dash.Dash(__name__)
+server = app.server
+app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
+
+
+eurostat_drop = eurostat.dropna(how='any',subset=["Value"],axis=0)
+eurostat_1 = eurostat_drop[-eurostat_drop.GEO.str.contains('Euro')]
+eurostat_final = eurostat_1.rename(index = {'Germany (until 1990 former territory of the FRG)': "Germany",'Kosovo (under United Nations Security Council Resolution 1244/99)': "Kosovo",'Former Yugoslav Republic of Macedonia, the': "Macedonia"})
+
 # Creating the data frame for the units:
-eurostat_1 = eurostat[eurostat['UNIT'] == 'Current prices, million euro'].reset_index()
+
+eurostat_final_1 = eurostat_final[eurostat['UNIT'] == 'Current prices, million euro']
+
+
+
+
+
 
 #Graph 1    
 #I create the layout of the first dropdown and set the default value for my graph - Gross domestic product at market prices
@@ -51,25 +53,19 @@ eurostat_1 = eurostat[eurostat['UNIT'] == 'Current prices, million euro'].reset_
 
 app.layout = html.Div([
     html.H2('Cloud Computing Assignment - Oskar Schwarze',style={'textAlign': 'center', 'color': 'black'}),
-    html.H2(children='Two Indicators',style={'textAlign': 'left'}),    
+    html.H4('Two Indicators',style={'textAlign': 'left'}),    
     html.Div([
         html.Div([
             dcc.Dropdown( 
-                id='xaxis-column',
+                id='xaxis-column1',
                 options=[{'label': i, 'value': i} for i in available_indicators],
                 value='Gross domestic product at market prices'
-            ),
-            dcc.RadioItems(
-                id='xaxis-type',
-                options=[{'label': i, 'value': i} for i in ['Linear', 'Log']],
-                value='Linear',
-                labelStyle={'display': 'inline-block'}
             )
         ],
-        style={'width': '48%', 'display': 'inline-block'}),
+        style={'width': '30%', 'display': 'inline-block'}),
         html.Div([
             dcc.Dropdown( 
-                id='yaxis-column',
+                id='yaxis-column1',
                 options=[{'label': i, 'value': i} for i in available_indicators],
                 value='Wages and salaries'
             ),
@@ -79,9 +75,8 @@ app.layout = html.Div([
                 value='Linear',
                 labelStyle={'display': 'inline-block'}
             )
-        ],style={'width': '48%', 'float': 'right', 'display': 'inline-block'})
-    ]),
-            
+        ],style={'width': '30%', 'float': 'right', 'display': 'inline-block'})
+    ]),            
     dcc.Graph(id='graph1'),
     html.Div(dcc.Slider( 
         id='year--slider',
@@ -94,24 +89,25 @@ app.layout = html.Div([
 
 #Second chart
 # Second graph name is id graph2
-    html.H2(children='Country & Indicator',style={'textAlign': 'left'}),   
-    html.Div([       
+    html.H4('Country & Indicator',style={'textAlign': 'left'}),   
+    html.Div([ 
+        
         html.Div([
             dcc.Dropdown( 
-                id='xaxis-column1',
+                id='xaxis-column2',
                 options=[{'label': i, 'value': i} for i in available_indicators],
                 value='Gross domestic product at market prices'
             )
         ],
-        style={'width': '48%', 'marginTop': 40, 'display': 'inline-block'}),
+        style={'width': '30%', 'marginTop': 40, 'display': 'inline-block'}),
 
         html.Div([
             dcc.Dropdown( 
-                id='yaxis-column1',
+                id='yaxis-column2',
                 options=[{'label': i, 'value': i} for i in available_countries],
                 value= "Spain"    
             )
-        ],style={'width': '48%', 'marginTop': 40, 'float': 'right', 'display': 'inline-block'})
+        ],style={'width': '30%', 'marginTop': 40, 'float': 'right', 'display': 'inline-block'})
      ]),
      dcc.Graph(id='graph2'),
 ])
@@ -121,8 +117,8 @@ app.layout = html.Div([
 
 @app.callback(
     dash.dependencies.Output('graph1', 'figure'),
-    [dash.dependencies.Input('xaxis-column', 'value'),
-     dash.dependencies.Input('yaxis-column', 'value'),
+    [dash.dependencies.Input('xaxis-column1', 'value'),
+     dash.dependencies.Input('yaxis-column1', 'value'),
      dash.dependencies.Input('year--slider', 'value')])
 
 
@@ -131,7 +127,7 @@ app.layout = html.Div([
 def update_graph(xaxis_column_name, yaxis_column_name,
                  year_value):
     
-    eurostatframe = eurostat[eurostat['TIME'] == year_value]
+    eurostatframe = eurostat_final[eurostat_final['TIME'] == year_value]
     return {
         'data': [go.Scatter(
             x=eurostatframe[eurostatframe['NA_ITEM'] == xaxis_column_name]['Value'],
@@ -162,8 +158,8 @@ def update_graph(xaxis_column_name, yaxis_column_name,
 #This is the call back function for the second chart
 @app.callback(
     dash.dependencies.Output('graph2', 'figure'),
-    [dash.dependencies.Input('xaxis-column1', 'value'),
-     dash.dependencies.Input('yaxis-column1', 'value')])
+    [dash.dependencies.Input('xaxis-column2', 'value'),
+     dash.dependencies.Input('yaxis-column2', 'value')])
 
 
 
@@ -173,7 +169,7 @@ def update_graph(xaxis_column_name, yaxis_column_name):
     
 
 
-    eurostatframe = eurostat_1[eurostat_1['GEO'] == yaxis_column_name]
+    eurostatframe = eurostat_final_1[eurostat_final_1['GEO'] == yaxis_column_name]
     return {
         'data': [go.Scatter(
             x=eurostatframe['TIME'].unique(),
