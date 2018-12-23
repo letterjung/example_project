@@ -16,6 +16,7 @@
 #Import necessary libraries
 
 import dash
+from dash.dependencies import Input, Output
 import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
@@ -41,7 +42,7 @@ available_countries = eurostat_final['GEO'].unique()
 
 # Creating the data frame for the units:
 
-eurostat_final_1 = eurostat_final[eurostat['UNIT'] == 'Current prices, million euro']
+eurostat_final_1 = eurostat_final[eurostat_final['UNIT'] == 'Current prices, million euro']
 
 # Graph 1    
 # define the outline style, naming of the axes and the headings
@@ -62,16 +63,22 @@ app.layout = html.Div([
                 id='xaxis-column1',
                 options=[{'label': i, 'value': i} for i in available_indicators],
                 value='Final consumption expenditure'
-            )
+            ),
+            dcc.RadioItems(
+                id='xaxis-type',
+                options=[{'label': i, 'value': i} for i in ['Linear', 'Log']],
+                value = 'Linear',
+                labelStyle={'display': 'inline-block'}
+            ),
         ],
-        style={'width': '45%', 'display': 'inline-block'}),
+        style={'width': '45%', 'display': 'inline-block', 'padding': 10}),
         html.Div([
             dcc.Dropdown( 
                 id='yaxis-column1',
                 options=[{'label': i, 'value': i} for i in available_indicators],
                 value='Changes in inventories'
             )
-        ],style={'width': '45%', 'float': 'right', 'display': 'inline-block'})
+        ],style={'width': '45%', 'float': 'right', 'display': 'inline-block','padding':10})
     ]),            
     dcc.Graph(id='graph1'),
     html.Div(dcc.Slider( #definition of the year slider
@@ -95,7 +102,7 @@ app.layout = html.Div([
                 value='Final consumption expenditure'
             )
         ],
-        style={'width': '45%', 'marginTop': 40, 'display': 'inline-block'}),
+        style={'width': '45%', 'marginTop': 40, 'display': 'inline-block', 'padding': 10}),
 
         html.Div([
             dcc.Dropdown( 
@@ -103,7 +110,7 @@ app.layout = html.Div([
                 options=[{'label': i, 'value': i} for i in available_countries],
                 value= "Spain"    
             )
-        ],style={'width': '45%', 'marginTop': 40, 'float': 'right', 'display': 'inline-block'})
+        ],style={'width': '45%', 'marginTop': 40, 'float': 'right', 'display': 'inline-block', 'padding':10})
      ]),
      dcc.Graph(id='graph2'),
 ])
@@ -115,13 +122,14 @@ app.layout = html.Div([
     dash.dependencies.Output('graph1', 'figure'),
     [dash.dependencies.Input('xaxis-column1', 'value'),
      dash.dependencies.Input('yaxis-column1', 'value'),
-     dash.dependencies.Input('year--slider', 'value')])
+     dash.dependencies.Input('year--slider', 'value'),
+     dash.dependencies.Input('xaxis-type', 'value')])
 
 
 # Dataframe for the time
 
 def update_graph(xaxis_column_name, yaxis_column_name,
-                 year_value):
+                 year_value, xaxis_type):
     
     eurostatframe = eurostat_final[eurostat_final['TIME'] == year_value]
     return {
@@ -134,12 +142,13 @@ def update_graph(xaxis_column_name, yaxis_column_name,
                 'size': 20,
                 'opacity': 0.5,
                 'line': {'width': 2.5, 'color': 'red'}
-            }
+            },
+            name=i[:20]
         )],
         'layout': go.Layout(
             xaxis={
                 'title': xaxis_column_name,
-                'type': 'linear'
+                'type': 'linear'if xaxis_type=='Linear' else 'log'
             },
             yaxis={
                 'title': yaxis_column_name,
@@ -170,12 +179,9 @@ def update_graph(xaxis_column_name, yaxis_column_name):
         'data': [go.Scatter(
             x=eurostatframe['TIME'].unique(),
             y=eurostatframe[eurostatframe['NA_ITEM'] == xaxis_column_name]['Value'],
-            mode='lines',
-            marker={
-                'size': 20,
-                'opacity': 0.5,
-                'line': {'width': 2.5, 'color': 'red'}
-            }
+            text=eurostatframe[eurostatframe['NA_ITEM'] == yaxis_column_name]['Value'],
+            mode='lines'
+           
         )],
         'layout': go.Layout(
             xaxis={
