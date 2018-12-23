@@ -1,4 +1,5 @@
 
+
 # coding: utf-8
 
 # In[ ]:
@@ -12,7 +13,7 @@
 # * The first one will be a scatterplot with two DropDown boxes for the different indicators. It will have also a slide for the different years in the data. 
 # * The other graph will be a line chart with two DropDown boxes, one for the country and the other for selecting one of the indicators. (hint use Scatter object using mode = 'lines' [(more here)](https://plot.ly/python/line-charts/) 
 
-
+#Import libraries
 import dash
 from dash.dependencies import Input, Output
 import dash_core_components as dcc
@@ -20,51 +21,70 @@ import dash_html_components as html
 import pandas as pd
 import plotly.graph_objs as go
 
-
-eurostat = pd.read_csv("nama_10_gdp_1_Data.csv")
-
-available_indicators = eurostat['NA_ITEM'].unique()
-
-available_countries = eurostat['GEO'].unique()
-
-
-# Creating the Dashboard for Graph 1 & 2:
-
 app = dash.Dash(__name__)
 server = app.server
+
 app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
 
 
 
+eurostat = pd.read_csv('nama_10_gdp_1_Data.csv',na_values=':',
+                usecols=['TIME', 'GEO', 'NA_ITEM', 'Value'] , engine='python')
+
+eurostat = eurostat.dropna(how='any',subset=["Value"],axis=0)
+eurostat = eurostat_drop[-data_drop.GEO.str.contains('Euro')]
+eurostat = eurostat.rename(index = {'Germany (until 1990 former territory of the FRG)': "Germany", 
+                         'Kosovo (under United Nations Security Council Resolution 1244/99)': "Kosovo",
+                        'Former Yugoslav Republic of Macedonia, the': "Macedonia"})
+
+
+#Creating the Dashboard for Graph 1 & 2: 
+available_indicators = eurostat['NA_ITEM'].unique()
+available_countries = eurostat['GEO'].unique()
+
+
 # Creating the data frame for the units:
-
 eurostat_1 = eurostat[eurostat['UNIT'] == 'Current prices, million euro']
-
-
-app.layout = html.Div([
 
 #Graph 1    
 #I create the layout of the first dropdown and set the default value for my graph - Gross domestic product at market prices
 # name of the x-axis is: xaxis-columns, and same for the yaxis = yaxiscolumns 
 #first graph name = graph1
-    
+
+
+app.layout = html.Div([
+    html.H2('Cloud Computing Assignment - Oskar Schwarze',style={'textAlign': 'center', 'color': 'black'}),
+    html.H4('Two Indicators',style={'textAlign': 'left'}),    
     html.Div([
         html.Div([
             dcc.Dropdown( 
-                id='xaxis-column1',
+                id='xaxis-column',
                 options=[{'label': i, 'value': i} for i in available_indicators],
                 value='Gross domestic product at market prices'
+            ),
+            dcc.RadioItems(
+                id='xaxis-type',
+                options=[{'label': i, 'value': i} for i in ['Linear', 'Log']],
+                value='Linear',
+                labelStyle={'display': 'inline-block'}
             )
         ],
-        style={'width': '30%', 'display': 'inline-block'}),
+        style={'width': '48%', 'display': 'inline-block'}),
         html.Div([
             dcc.Dropdown( 
-                id='yaxis-column1',
+                id='yaxis-column',
                 options=[{'label': i, 'value': i} for i in available_indicators],
                 value='Wages and salaries'
+            ),
+            dcc.RadioItems(
+                id='yaxis-type',
+                options=[{'label': i, 'value': i} for i in ['Linear', 'Log']],
+                value='Linear',
+                labelStyle={'display': 'inline-block'}
             )
-        ],style={'width': '30%', 'float': 'right', 'display': 'inline-block'})
+        ],style={'width': '48%', 'float': 'right', 'display': 'inline-block'})
     ]),
+            
     dcc.Graph(id='graph1'),
     html.Div(dcc.Slider( 
         id='year--slider',
@@ -77,25 +97,25 @@ app.layout = html.Div([
 
 #Second chart
 # Second graph name is id graph2
-    
+    html.H4('Country & Indicator',style={'textAlign': 'left'}),   
     html.Div([
         
         html.Div([
             dcc.Dropdown( 
-                id='xaxis-column2',
+                id='xaxis-column1',
                 options=[{'label': i, 'value': i} for i in available_indicators],
                 value='Gross domestic product at market prices'
             )
         ],
-        style={'width': '30%', 'marginTop': 40, 'display': 'inline-block'}),
+        style={'width': '48%', 'marginTop': 40, 'display': 'inline-block'}),
 
         html.Div([
             dcc.Dropdown( 
-                id='yaxis-column2',
+                id='yaxis-column1',
                 options=[{'label': i, 'value': i} for i in available_countries],
                 value= "Spain"    
             )
-        ],style={'width': '30%', 'marginTop': 40, 'float': 'right', 'display': 'inline-block'})
+        ],style={'width': '48%', 'marginTop': 40, 'float': 'right', 'display': 'inline-block'})
      ]),
      dcc.Graph(id='graph2'),
 ])
@@ -105,8 +125,8 @@ app.layout = html.Div([
 
 @app.callback(
     dash.dependencies.Output('graph1', 'figure'),
-    [dash.dependencies.Input('xaxis-column1', 'value'),
-     dash.dependencies.Input('yaxis-column1', 'value'),
+    [dash.dependencies.Input('xaxis-column', 'value'),
+     dash.dependencies.Input('yaxis-column', 'value'),
      dash.dependencies.Input('year--slider', 'value')])
 
 
@@ -146,8 +166,8 @@ def update_graph(xaxis_column_name, yaxis_column_name,
 #This is the call back function for the second chart
 @app.callback(
     dash.dependencies.Output('graph2', 'figure'),
-    [dash.dependencies.Input('xaxis-column2', 'value'),
-     dash.dependencies.Input('yaxis-column2', 'value')])
+    [dash.dependencies.Input('xaxis-column1', 'value'),
+     dash.dependencies.Input('yaxis-column1', 'value')])
 
 
 
@@ -187,4 +207,3 @@ def update_graph(xaxis_column_name, yaxis_column_name):
 
 if __name__ == '__main__':
     app.run_server()
-
