@@ -79,15 +79,20 @@ app.layout = html.Div([
             )
         ],style={'width': '45%', 'float': 'right', 'display': 'inline-block','padding':10})
     ]),            
+    
+    
     dcc.Graph(id='graph1'),
-    html.Div(dcc.Slider( #definition of the year slider
+    
+    dcc.Slider( #definition of the year slider
         id='year--slider',
         min=eurostat['TIME'].min(),
         max=eurostat['TIME'].max(),
         value=eurostat['TIME'].max(),
         step=None,
         marks={str(time): str(time) for time in eurostat['TIME'].unique()},
-    ), style={'marginRight': 50, 'marginLeft': 110},),
+    ),
+    
+    html.H1('\n'),
 
 # Graph 2
 # define the outline style, naming of the axes and the headings
@@ -99,7 +104,7 @@ app.layout = html.Div([
                 id='xaxis-column2',
                 options=[{'label': i, 'value': i} for i in available_indicators],
                 value='Final consumption expenditure'
-            )
+            ),
         ],
         style={'width': '45%', 'marginTop': 40, 'display': 'inline-block', 'padding': 10}),
 
@@ -108,10 +113,10 @@ app.layout = html.Div([
                 id='yaxis-column2',
                 options=[{'label': i, 'value': i} for i in available_countries],
                 value= "Spain"    
-            )
+            ),
         ],style={'width': '45%', 'marginTop': 40, 'float': 'right', 'display': 'inline-block', 'padding':10})
      ]),
-     dcc.Graph(id='graph2'),
+     dcc.Graph(id='graph2')
 ])
 
 
@@ -140,10 +145,12 @@ def update_graph(xaxis_column_name, yaxis_column_name,
             marker={
                 'size': 20,
                 'opacity': 0.5,
-                'line': {'width': 2.5, 'color': 'red'}
+                'line': {'width': 1.5, 'color': 'red'}
             },
             name=i[:20]
-        )],
+            
+        )for i in eurostatframe.GEO.unique()
+            ],
         'layout': go.Layout(
             xaxis={
                 'title': xaxis_column_name,
