@@ -144,8 +144,8 @@ def update_graph(xaxis_column_name, yaxis_column_name,
             mode='markers',
             marker={
                 'size': 20,
-                'opacity': 0.5,
-                'line': {'width': 1.5, 'color': 'red'}
+                'opacity': 0.9,
+                'line': {'width': 1.5, 'color': 'black'}
             },
             name=i[:20]
             
