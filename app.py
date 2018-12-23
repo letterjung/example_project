@@ -138,9 +138,9 @@ def update_graph(xaxis_column_name, yaxis_column_name,
     eurostatframe = eurostat_final[eurostat_final['TIME'] == year_value]
     return {
         'data': [go.Scatter(
-            x=eurostatframe[eurostatframe['NA_ITEM'] == xaxis_column_name]['Value'],
-            y=eurostatframe[eurostatframe['NA_ITEM'] == yaxis_column_name]['Value'],
-            text=eurostatframe[eurostatframe['NA_ITEM'] == yaxis_column_name]['GEO'],
+            x=eurostatframe[(eurostatframe['NA_ITEM'] == xaxis_column_name) &(eurostatframe['GEO']==str(i) )]['Value'],
+            y=eurostatframe[(eurostatframe['NA_ITEM'] == yaxis_column_name) &(eurostatframe['GEO']==str(i) )]['Value'],
+            text=eurostatframe[eurostatframe['GEO'] == str(i)]['GEO'],
             mode='markers',
             marker={
                 'size': 20,
