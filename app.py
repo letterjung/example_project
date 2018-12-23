@@ -53,7 +53,7 @@ eurostat_final_1 = eurostat_final[eurostat['UNIT'] == 'Current prices, million e
 
 app.layout = html.Div([
     html.H2('Cloud Computing Assignment - Oskar Schwarze',style={'textAlign': 'center', 'color': 'black'}),
-    html.H4('Two Indicators',style={'textAlign': 'left'),    
+    html.H4('Two Indicators',style={'textAlign': 'left'}),    
     html.Div([
         html.Div([
             dcc.Dropdown( 
@@ -136,7 +136,8 @@ def update_graph(xaxis_column_name, yaxis_column_name,
             mode='markers',
             marker={
                 'size': 15,
-                'opacity': 0.5,
+                'opacity': 0.5
+                'color':'rgba(255,182,193,.9)',
                 'line': {'width': 0.5, 'color': 'black'}
             }
         )],
