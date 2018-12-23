@@ -70,12 +70,6 @@ app.layout = html.Div([
                 id='yaxis-column1',
                 options=[{'label': i, 'value': i} for i in available_indicators],
                 value='Wages and salaries'
-            ),
-            dcc.RadioItems(
-                id='yaxis-type',
-                options=[{'label': i, 'value': i} for i in ['Linear', 'Log']],
-                value='Linear',
-                labelStyle={'display': 'inline-block'}
             )
         ],style={'width': '45%', 'float': 'right', 'display': 'inline-block'})
     ]),            
