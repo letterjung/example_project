@@ -1,5 +1,3 @@
-
-
 # coding: utf-8
 
 # In[ ]:
@@ -33,9 +31,7 @@ eurostat = pd.read_csv('nama_10_gdp_1_Data.csv',na_values=':',
 
 eurostat = eurostat.dropna(how='any',subset=["Value"],axis=0)
 eurostat = eurostat_drop[-data_drop.GEO.str.contains('Euro')]
-eurostat = eurostat.rename(index = {'Germany (until 1990 former territory of the FRG)': "Germany", 
-                         'Kosovo (under United Nations Security Council Resolution 1244/99)': "Kosovo",
-                        'Former Yugoslav Republic of Macedonia, the': "Macedonia"})
+eurostat = eurostat.rename(index = {'Germany (until 1990 former territory of the FRG)': "Germany",'Kosovo (under United Nations Security Council Resolution 1244/99)': "Kosovo",'Former Yugoslav Republic of Macedonia, the': "Macedonia"})
 
 
 #Creating the Dashboard for Graph 1 & 2: 
@@ -44,7 +40,7 @@ available_countries = eurostat['GEO'].unique()
 
 
 # Creating the data frame for the units:
-eurostat_1 = eurostat[eurostat['UNIT'] == 'Current prices, million euro']
+eurostat_1 = eurostat[eurostat['UNIT'] == 'Current prices, million euro'].reset_index()
 
 #Graph 1    
 #I create the layout of the first dropdown and set the default value for my graph - Gross domestic product at market prices
@@ -54,7 +50,7 @@ eurostat_1 = eurostat[eurostat['UNIT'] == 'Current prices, million euro']
 
 app.layout = html.Div([
     html.H2('Cloud Computing Assignment - Oskar Schwarze',style={'textAlign': 'center', 'color': 'black'}),
-    html.H4('Two Indicators',style={'textAlign': 'left'}),    
+    html.H2(children='Two Indicators',style={'textAlign': 'left'}),    
     html.Div([
         html.Div([
             dcc.Dropdown( 
@@ -97,9 +93,8 @@ app.layout = html.Div([
 
 #Second chart
 # Second graph name is id graph2
-    html.H4('Country & Indicator',style={'textAlign': 'left'}),   
-    html.Div([
-        
+    html.H2(children='Country & Indicator',style={'textAlign': 'left'}),   
+    html.Div([       
         html.Div([
             dcc.Dropdown( 
                 id='xaxis-column1',
@@ -207,3 +202,4 @@ def update_graph(xaxis_column_name, yaxis_column_name):
 
 if __name__ == '__main__':
     app.run_server()
+
