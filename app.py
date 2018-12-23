@@ -132,8 +132,9 @@ def update_graph(xaxis_column_name, yaxis_column_name,
             mode='markers',
             marker={
                 'size': 15,
+                'color': 'yellow'
                 'opacity': 0.5,
-                'line': {'width': 0.5, 'color': 'red'}
+                'line': {'width': 0.9, 'color': 'red'}
             }
         )],
         'layout': go.Layout(
@@ -174,7 +175,7 @@ def update_graph(xaxis_column_name, yaxis_column_name):
             marker={
                 'size': 15,
                 'opacity': 0.5,
-                'line': {'width': 0.5, 'color': 'red'}
+                'line': {'width': 0.9, 'color': 'red'}
             }
         )],
         'layout': go.Layout(
